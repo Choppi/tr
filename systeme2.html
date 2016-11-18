@@ -1,0 +1,153 @@
+<html>
+	<head>
+		<title>Premiere application Three.js</title>
+		<style>canvas{width : 100%; height: 100%}</style>
+	</head>
+	<body>
+		<script src="./three.js"></script>
+		<script> //Code javascript à mettre ici
+			var rotatterre = new THREE.Vector3(Math.sin(0,401426),-Math.cos(0,401426),0);
+			var rotatmoon = new THREE.Vector3(Math.cos(0,0872665),0,Math.sin(0,0872665));
+			var rotatpluton = new THREE.Vector3(Math.cos(17.2),Math.sin(16.8),0);
+			var i = 0;
+
+			var scene = new THREE.Scene();
+			//création de la caméra
+			var camera = new THREE.PerspectiveCamera (75, window.innerWidth / window.innerHeight, 0.1, 8000);
+			var renderer = new THREE.WebGLRenderer(); 
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+			
+			var camera2 = new THREE.PerspectiveCamera (75, window.innerWidth / window.innerHeight, 0.1, 1000);
+			var pLocal = new THREE.Vector3( 0, 0, -1 );
+			var pWorld = pLocal.applyMatrix4( camera.matrixWorld );
+			var dir = pWorld.sub( camera.position ).normalize();
+
+			var texture = THREE.ImageUtils.loadTexture("SunMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry(120, 40, 40);
+			var material = new THREE.MeshBasicMaterial({color: "white" , map: texture});
+			var soleil = new THREE.Mesh( geometry, material);
+			
+			var texture = THREE.ImageUtils.loadTexture("EarthMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry(6.2, 40, 40);
+			var material = new THREE.MeshLambertMaterial({color: "white", map: texture});
+			var terre = new THREE.Mesh( geometry, material);
+
+			terre.position.z = 240;
+			
+			var texture = THREE.ImageUtils.loadTexture("MoonMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;	
+			
+			var geometry = new THREE.SphereGeometry( 1.5, 40, 40);
+			var material = new THREE.MeshLambertMaterial({color: "white" , map: texture});
+			var lune = new THREE.Mesh( geometry, material);
+
+			lune.position.z = 19;
+
+			var noyaus = new THREE.Object3D();
+			var noyaut = new THREE.Object3D();
+			var noyausmain = new THREE.Object3D();
+
+			var noyaucamera = new THREE.Object3D();
+
+			noyaut.position.z = 240;
+			var light = new THREE.PointLight( 0xffffff, 10, 2000 );
+			light.position.set( 0, 0, 0 );
+			scene.add( light );
+
+			scene.add(soleil);
+			scene.add(terre);
+			scene.add(lune);
+			scene.add(noyausmain);
+
+			scene.add(noyaus);
+			scene.add(noyaut);
+
+			var chrono = new THREE.Clock();
+			chrono.start();
+			var time = 0;
+			var time2 = 0;
+
+			noyaut.parent = noyaus;
+
+			terre.parent = noyaus;
+			lune.parent = noyaut;
+
+			noyaus.parent = noyausmain;
+			camera.position.z = 500;
+
+			camera2.position.z = 200;
+			new THREE.Matrix4().makeRotationZ( (Math.PI/4) ).multiplyVector3( camera2.up );
+			//camera2.useQuaternion = true;
+			//vector = new THREE.Vector3(1,0,0);
+			//var dirvector = vector.applyQuaternion(camera2.quaternion);
+
+			// Fonction de rotation d'un objet autour d'un axe (axis) à une vitesse de x radians/frame
+			var rotObjectMatrix;
+			function rotateAroundObjectAxis(object, axis, radians) {
+			    rotObjectMatrix = new THREE.Matrix4();
+			    rotObjectMatrix.makeRotationAxis(axis.normalize(), radians);
+
+			    object.matrix.multiply(rotObjectMatrix);
+
+			    object.rotation.setFromRotationMatrix(object.matrix);
+			}
+
+			var myKeyboardHandler = function (keyEvent) {
+				if(keyEvent.keyCode == 67) {
+					i++;
+				}
+				if(keyEvent.keyCode == 37) {
+					rotateAroundObjectAxis(noyausmain,new THREE.Vector3(0,1,0),Math.PI / 90)
+				}
+				if(keyEvent.keyCode == 38) {
+				rotateAroundObjectAxis(noyausmain,new THREE.Vector3(1,0,0),Math.PI / 90)
+				}
+				if(keyEvent.keyCode == 39) {
+				rotateAroundObjectAxis(noyausmain,new THREE.Vector3(0,-1,0),Math.PI / 90)
+				}
+				if(keyEvent.keyCode == 40) {
+				rotateAroundObjectAxis(noyausmain,new THREE.Vector3(-1,0,0),Math.PI / 90)
+				}
+				if(keyEvent.keyCode == 33) {
+					camera.position.z -= 15;
+				}
+				if(keyEvent.keyCode == 34) {
+					camera.position.z += 15;
+				}
+				
+			}
+				window.onkeydown = myKeyboardHandler ;
+    				   
+			 function render(){
+			// fonction affichant le cube et effectuant les modifications sur ce dernier
+				requestAnimationFrame(render);
+				time = (chrono.getDelta());
+				noyaus.rotation.y += (Math.PI/30) * time ;
+				noyaut.rotation.y += (2 * Math.PI/5) * time;
+				rotateAroundObjectAxis(terre,rotatterre,0.03);
+				rotateAroundObjectAxis(lune,rotatmoon,0.03);
+				if(i%2 == 0) {
+				renderer.render(scene, camera); 
+				}
+				else {
+				camera2.lookAt( terre.position ); 
+				renderer.render(scene, camera2); 
+				}
+		}
+			render();
+		</script> 	
+	</body>
+</html>
+
+
+
+
+

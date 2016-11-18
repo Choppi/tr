@@ -1,0 +1,350 @@
+<html>
+	<head>
+		<title>Premiere application Three.js</title>
+		<style>canvas{width : 100%; height: 100%}</style>
+	</head>
+	<body>
+		<script src="./three.js"></script>
+		<script> //Code javascript à mettre ici
+			var rotatterre = new THREE.Vector3(Math.sin(0,401426),-Math.cos(0,401426),0);
+			var rotatmoon = new THREE.Vector3(Math.cos(0,0872665),0,Math.sin(0,0872665));
+			var rotatpluton = new THREE.Vector3(Math.cos(17.2),Math.sin(16.8),0);
+			var i = 0;
+			var vector;
+			var dirvector;
+
+			var scene = new THREE.Scene();
+			//création de la caméra
+			var camera = new THREE.PerspectiveCamera (75, window.innerWidth / window.innerHeight, 0.1, 8000);
+			var renderer = new THREE.WebGLRenderer(); 
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+
+			var camera2 = new THREE.PerspectiveCamera (75, window.innerWidth / window.innerHeight, 0.1, 1000);
+			var pLocal = new THREE.Vector3( 0, 0, -1 );
+			var pWorld = pLocal.applyMatrix4( camera.matrixWorld );
+			var dir = pWorld.sub( camera2.position ).normalize();
+
+			var texture = THREE.ImageUtils.loadTexture("SunMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry(120, 100, 100);
+			var material = new THREE.MeshBasicMaterial({color: "white" , map: texture});
+			var soleil = new THREE.Mesh( geometry, material);
+			
+			var texture = THREE.ImageUtils.loadTexture("EarthMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry(6.2, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "white", map: texture});
+			var terre = new THREE.Mesh( geometry, material);
+
+			terre.position.z = 240;
+
+
+			var texture = THREE.ImageUtils.loadTexture("MercureMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry(5, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "white", map: texture});
+			var mercure = new THREE.Mesh( geometry, material);
+
+			mercure.position.z = 153;
+
+			var texture = THREE.ImageUtils.loadTexture("VenusMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry( 12,7, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "white", map: texture});
+			var venus = new THREE.Mesh( geometry, material);
+
+			venus.position.z = 190;
+
+			var texture = THREE.ImageUtils.loadTexture("MarsMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry( 6.8, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "white", map: texture});
+			var mars = new THREE.Mesh( geometry, material);
+
+			mars.position.z = 290;
+
+			var texture = THREE.ImageUtils.loadTexture("JupiterMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry( 142.7, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "white", map: texture});
+			var jupiter = new THREE.Mesh( geometry, material);
+
+			jupiter.position.z = 600;
+
+			var texture = THREE.ImageUtils.loadTexture("SaturneMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry( 120.8, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "white", map: texture});
+			var saturne = new THREE.Mesh( geometry, material);
+
+			saturne.position.z = 1000;
+
+			var texture = THREE.ImageUtils.loadTexture("SaturneAnneaux.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.RingGeometry( 125, 160, 35);
+			var material = new THREE.MeshBasicMaterial( { color: "white", side: THREE.DoubleSide, map:texture, transparent : true, opacity: 0.8 } );
+			var mesh = new THREE.Mesh( geometry, material );
+
+			var texture = THREE.ImageUtils.loadTexture("UranusMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry( 47.1, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "white", map: texture});
+			var uranus = new THREE.Mesh( geometry, material);
+
+			uranus.position.z = 1300;
+
+			var texture = THREE.ImageUtils.loadTexture("NeptuneMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry( 44.5, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "white", map: texture});
+			var neptune = new THREE.Mesh( geometry, material);
+
+			neptune.position.z = 1500;
+
+
+			var texture = THREE.ImageUtils.loadTexture("PlutonMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry( 44.5, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "yellow", side: THREE.DoubleSide});
+			var pluton = new THREE.Mesh( geometry, material);
+
+			pluton.position.z = 1700;
+
+			var texture = THREE.ImageUtils.loadTexture("MoonMap_2500x1250.jpg");
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+
+			var geometry = new THREE.SphereGeometry( 1.5, 100, 100);
+			var material = new THREE.MeshLambertMaterial({color: "white" , map: texture});
+			var lune = new THREE.Mesh( geometry, material);
+
+			lune.position.z = 19;
+
+			var noyaus = new THREE.Object3D();
+			var noyaut = new THREE.Object3D();
+			var noyaume = new THREE.Object3D();
+			var noyauve = new THREE.Object3D();
+			var noyauma = new THREE.Object3D();
+			var noyauju = new THREE.Object3D();
+			var noyausa = new THREE.Object3D();
+			var noyauur = new THREE.Object3D();
+			var noyaune = new THREE.Object3D();
+			var noyaupl = new THREE.Object3D();
+
+			var noyausme = new THREE.Object3D();
+			var noyausve = new THREE.Object3D();
+			var noyausma = new THREE.Object3D();
+			var noyausju = new THREE.Object3D();
+			var noyaussa = new THREE.Object3D();
+			var noyausur = new THREE.Object3D();
+			var noyausne = new THREE.Object3D();
+			var noyauspl = new THREE.Object3D();
+			var noyausmain = new THREE.Object3D();
+
+			var noyaucamera = new THREE.Object3D();
+
+			noyaut.position.z = 240;
+			var light = new THREE.PointLight( 0xffffff, 10, 2000 );
+			light.position.set( 0, 0, 0 );
+			scene.add( light );
+
+			scene.add(soleil);
+			scene.add(terre);
+			scene.add(lune);
+			scene.add(mercure);
+			scene.add(venus);
+			scene.add(mars);
+			scene.add(jupiter);
+			scene.add(saturne);
+			scene.add(mesh);
+			scene.add(uranus);
+			scene.add(neptune);
+			scene.add(pluton);
+
+			scene.add(noyaus);
+			scene.add(noyaut);
+			scene.add(noyaume);
+			scene.add(noyauve);
+			scene.add(noyauma);
+			scene.add(noyauju);
+			scene.add(noyausa);
+			scene.add(noyauur);
+			scene.add(noyaune);
+			scene.add(noyaupl);
+
+			scene.add(noyausme);
+			scene.add(noyausve);
+			scene.add(noyausma);
+			scene.add(noyausju);
+			scene.add(noyaussa);
+			scene.add(noyausur);
+			scene.add(noyausne);
+			scene.add(noyauspl);
+			scene.add(noyausmain);
+			scene.add(noyaucamera);
+
+			var chrono = new THREE.Clock();
+			chrono.start();
+			var time = 0;
+			var time2 = 0;
+			var vang1 = 2 * Math.PI / 1.8;
+			var vang3 = 2 * Math.PI / 1;
+			var vang2 = 2 * Math.PI / 0.6;
+			var vang4 = 2 * Math.PI/ 2.6;
+			var vang5 = 2 * Math.PI / 12;
+			var vang6 = 2 * Math.PI / 28.6;
+			var vang7 = 2 * Math.PI/ 85;
+			var vang8 = 2 * Math.PI/ 166;
+
+
+
+			noyaut.parent = noyaus;
+			noyaume.parent = noyaus;
+			noyauve.parent = noyaus;
+			noyauma.parent = noyaus;
+			noyauju.parent = noyaus;
+			noyausa.parent = noyaus;
+			noyauur.parent = noyaus;
+			noyaune.parent = noyaus;
+			noyaupl.parent = noyaus;
+
+			terre.parent = noyaus;
+			mercure.parent = noyausme;
+			venus.parent = noyausve;
+			jupiter.parent = noyausju;
+			mars.parent = noyausma;
+			saturne.parent = noyaussa;
+			neptune.parent = noyausne;
+			uranus.parent = noyausur;
+			pluton.parent = noyauspl;
+			lune.parent = noyaut;
+			mesh.parent = saturne;
+
+			noyaus.parent = noyausmain;
+			noyausme.parent = noyausmain;
+			noyausve.parent = noyausmain;
+			noyausju.parent = noyausmain;
+			noyausma.parent = noyausmain;
+			noyaussa.parent = noyausmain;
+			noyausne.parent = noyausmain;
+			noyausur.parent = noyausmain;
+			noyauspl.parent = noyausmain;
+			noyaucamera.parent = noyaus;
+			camera2.parent = noyaucamera;
+
+			camera.position.z = 2000;
+			camera2.position.z = 800;
+			
+
+
+			vector = new THREE.Vector3( 1,1,0);
+			dirvector = vector.applyQuaternion(mesh.quaternion);
+			mesh.lookAt(dirvector);
+
+			var rotObjectMatrix;
+			function rotateAroundObjectAxis(object, axis, radians) {
+			    rotObjectMatrix = new THREE.Matrix4();
+			    rotObjectMatrix.makeRotationAxis(axis.normalize(), radians);
+
+			    object.matrix.multiply(rotObjectMatrix);
+
+			    object.rotation.setFromRotationMatrix(object.matrix);
+			}
+
+			var rotWorldMatrix;      
+			function rotateAroundWorldAxis(object, axis, radians) {
+			    rotWorldMatrix = new THREE.Matrix4();
+			    rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
+
+			    rotWorldMatrix.multiply(object.matrix);                
+
+			    object.matrix = rotWorldMatrix;
+
+			    object.rotation.setFromRotationMatrix(object.matrix);
+			}
+
+			var myKeyboardHandler = function (keyEvent) {
+				if(keyEvent.keyCode == 67) {
+					i++;
+				}
+				if(keyEvent.keyCode == 37) {
+					rotateAroundObjectAxis(noyausmain,new THREE.Vector3(0,1,0),Math.PI / 90)
+				}
+				if(keyEvent.keyCode == 38) {
+				rotateAroundObjectAxis(noyausmain,new THREE.Vector3(1,0,0),Math.PI / 90)
+				}
+				if(keyEvent.keyCode == 39) {
+				rotateAroundObjectAxis(noyausmain,new THREE.Vector3(0,-1,0),Math.PI / 90)
+				}
+				if(keyEvent.keyCode == 40) {
+				rotateAroundObjectAxis(noyausmain,new THREE.Vector3(-1,0,0),Math.PI / 90)
+				}
+				if(keyEvent.keyCode == 33) {
+					camera.position.z -= 15;
+				}
+				if(keyEvent.keyCode == 34) {
+					camera.position.z += 15;
+				}
+				
+			}
+				window.onkeydown = myKeyboardHandler ;
+    					
+			function render(){
+			// fonction affichant le cube et effectuant les modifications sur ce dernier
+				requestAnimationFrame(render);
+
+				time = (chrono.getDelta());
+				noyaus.rotation.y += vang1 * time;
+				noyaut.rotation.y += vang2 * time;
+				noyausme.rotation.y += vang2 * time;
+				noyausve.rotation.y += vang3 * time;
+				noyausma.rotation.y += vang4 * time;
+				noyausju.rotation.y += vang5 * time;
+				noyaussa.rotation.y += vang6 * time;
+				noyausne.rotation.y += vang8 * time;
+				noyausur.rotation.y += vang7 * time;
+				rotateAroundObjectAxis(terre,rotatterre,vang3*time);
+				rotateAroundObjectAxis(lune,rotatmoon,vang3*time);
+				rotateAroundObjectAxis(noyauspl,rotatpluton,vang4*time);
+				if(i%2 == 0) {
+				renderer.render(scene, camera); 
+				}
+				else {
+					var vectorcam = new THREE.Vector3(1,0,0);
+					var dirvectorcam = vectorcam.applyQuaternion(camera2.quaternion);
+					camera2.lookAt(dirvectorcam);
+				renderer.render(scene, camera2); 
+				}
+		}
+			render();
+		</script> 	
+	</body>
+</html>
+
+
+
+
+

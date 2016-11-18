@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<title>Premiere application Three.js</title>
+		<style>canvas{width : 100%; height: 100%}</style>
+	</head>
+	<body>
+		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+		<script> //Code javascript à mettre ici
+			var scene = new THREE.Scene();
+			//création de la caméra
+			var camera = new THREE.PerspectiveCamera (75, window.innerWidth / window.innerHeight, 0.1, 1000);
+			var renderer = new THREE.WebGLRenderer(); 
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+			//création du cube
+			var geometry = new THREE.TorusGeometry( 1, 1, 12);
+			var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+			var cube = new THREE.Mesh( geometry, material);
+				scene.add(cube);
+			camera.position.z=20;
+			
+			function render(){
+			// fonction affichant le cube et effectuant les modifications sur ce dernier
+				requestAnimationFrame(render);
+				//rotation du cube
+				renderer.render(scene, camera); 
+			}
+			render();
+			
+		</script>
+	</body>
+</html>
